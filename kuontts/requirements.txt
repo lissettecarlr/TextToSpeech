@@ -1,0 +1,15 @@
+Cython
+librosa==0.9.2
+matplotlib==3.3.1
+numpy
+scipy
+tensorboard
+unidecode
+pyopenjtalk-prebuilt
+jamo
+cn2an
+pypinyin
+jieba
+
+
+
