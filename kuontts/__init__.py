@@ -52,33 +52,40 @@ class TTS():
                 text = "[EN]" + text + "[EN]"
             else:
                 raise ValueError("language error")
-             
-            speaker_id = speaker_ids[speaker]
-            stn_tst = TTS.get_text(text, hps, False)
-            with no_grad():
-                x_tst = stn_tst.unsqueeze(0).to(device)
-                x_tst_lengths = LongTensor([stn_tst.size(0)]).to(device)
-                sid = LongTensor([speaker_id]).to(device)
-                audio = model.infer(x_tst, x_tst_lengths, sid=sid, 
-                                    noise_scale=.667, # 情感变化程度
-                                    noise_scale_w=0.8,# 音素发音长度
-                                    length_scale=1.0 / speed)[0][0, 0].data.cpu().float().numpy()
-            del stn_tst, x_tst, x_tst_lengths, sid
 
-            return "Success", (hps.data.sampling_rate, audio)
+            try: 
+                speaker_id = speaker_ids[speaker]
+                stn_tst = TTS.get_text(text, hps, False)
+                with no_grad():
+                    x_tst = stn_tst.unsqueeze(0).to(device)
+                    x_tst_lengths = LongTensor([stn_tst.size(0)]).to(device)
+                    sid = LongTensor([speaker_id]).to(device)
+                    audio = model.infer(x_tst, x_tst_lengths, sid=sid, 
+                                        noise_scale=.667, # 情感变化程度
+                                        noise_scale_w=0.8,# 音素发音长度
+                                        length_scale=1.0 / speed)[0][0, 0].data.cpu().float().numpy()
+                del stn_tst, x_tst, x_tst_lengths, sid
+            except Exception as e:
+                raise  ValueError("tts error:{}".format(e))
+
+            return (hps.data.sampling_rate, audio)
 
         return tts_fn
 
     def run(self,text,speaker="kt",language='简体中文', speed=1,save_path:str=None):
-        text_output,audio_output = self.tts_fn(text=text, speaker=speaker, language=language, speed=speed)
-        if(save_path != None):
-            if not save_path.endswith('.wav'):
-                save_path = os.path.splitext(save_path)[0] + '.wav' 
-            # import soundfile as sf
-            # sf.write(save_path, audio_output[1], audio_output[0])
-            import scipy.io.wavfile as wavf
-            wavf.write(save_path,audio_output[0],audio_output[1])
-        return text_output,audio_output
+        try:
+            audio_output = self.tts_fn(text=text, speaker=speaker, language=language, speed=speed)
+
+            if(save_path != None):
+                if not save_path.endswith('.wav'):
+                    save_path = os.path.splitext(save_path)[0] + '.wav' 
+                # import soundfile as sf
+                # sf.write(save_path, audio_output[1], audio_output[0])
+                import scipy.io.wavfile as wavf
+                wavf.write(save_path,audio_output[0],audio_output[1])
+            return "Success",audio_output
+        except Exception as e:
+            return "Fail",e
 
 
 if __name__ == "__main__":

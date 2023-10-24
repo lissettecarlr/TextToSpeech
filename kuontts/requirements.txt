@@ -10,6 +10,8 @@ jamo
 cn2an
 pypinyin
 jieba
-
-
-
+ko_pron
+inflect
+eng_to_ipa
+num_thai==0.0.5
+indic_transliteration
