@@ -1,2 +1,4 @@
-api_port : 20004
+api_port : 20003
 api_workers : 1
+
+api_url: "http://172.19.100.38:20003/tts/convert"
