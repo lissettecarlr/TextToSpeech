@@ -2,7 +2,9 @@
 
 本说明是推理部分，训练文档请见[这里](./finetune/README.md)
 
-## 环境
+## 1 环境
+
+### 1.1 如果离线使用
 
 * conda虚拟环境
     ```bash
@@ -15,9 +17,9 @@
     pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
     ```
 
-* 进入kuontts文件夹安装软件包
+* 进入kuontts.offline文件夹安装软件包
     ```
-    pip install -r ./kuontts/requirements.txt
+    pip install -r requirements.txt
     ```
 
     在windows上matplotlib会报错：
@@ -34,21 +36,47 @@
     ```    
     如果是windows上则将build文件夹中的core.cp310-win_amd64.pyd复制到monotonic_align/monotonic_align中
 
-## 导入模型
+### 1.2 如果是在线使用
 
-将模型文件放置到kuontts/OUTPUT_MODEL文件夹中，包含config.json和G_latest.pth两个文件
+客户端部分只需要
 
-## 使用
+* requests
+* numpy
+* yaml
 
-```bash
-python example.py
+服务端部分请还是根据上面的离线环境安装
+
+## 2 使用
+
+### 2.1 导入模型
+
+离线使用或者部署服务需要下载模型，放置到kuontts/offline/OUTPUT_MODEL文件夹中，如果不放在治理则需要在使用`OfflineTTS`时传入地址，包含config.json和G_latest.pth两个文件。
+
+### 2.2 离线使用
+
+修改kuontts中的配置文件config.yaml
+```yaml
+channel : offline
 ```
-将会在当前目录生成名为test.wav的音频文件
+使用示例参考example.py，或者直接运行，在同级目录生成示例音频
 
-api:
-在config.yaml中设置端口，然后启动服务
+### 2.3 服务部署
+
+端口直接在api.py中修改，然后
 ```bash
 python api.py
+```
+还有在代码中如果需要选择GPU，则修改
+```bash
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+```
+
+### 2.4 在线使用
+
+也就是调用接口请求了上面部署的服务，修改kuontts中的配置文件config.yaml
+```yaml
+channel : offline
+api_url: "填入接口地址"
 ```
 
 接口：
@@ -62,5 +90,6 @@ python api.py
     * test (string): 需要转化的文本
     * language (string): 文本语言
     * speed (float): 语言速度
+    * speaker(string):模型中的角色
 
-请求示例见文件[post_test.py](./post_test.py)
+

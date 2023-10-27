@@ -16,12 +16,12 @@ from pydantic import BaseModel, Field
 app = FastAPI()
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
-def load_config(file_path):
-    with open(file_path, "r") as file:
-        config = yaml.safe_load(file)
-    return config
+# def load_config(file_path):
+#     with open(file_path, "r") as file:
+#         config = yaml.safe_load(file)
+#     return config
 
-cfg = load_config("config.yaml")
+# cfg = load_config("config.yaml")
 
 def _gc(forced: bool = False):
     global args
@@ -55,13 +55,14 @@ class TTsRequest(BaseModel):
     text: str
     language : str = "简体中文"
     speed : float = 1
+    speaker:str = "kt"
 
-from kuontts import TTS
-tts =  TTS()
+from kuontts.offline import OfflineTTS
+tts =  OfflineTTS()
 @app.post("/tts/convert")
 async def convert_text(request:TTsRequest):
     logger.info("接收到转化任务：{}".format(request))
-    result,audio = tts.run(text=request.text,language=request.language,speed=request.speed)
+    result,audio = tts.run(text=request.text,speaker=request.speaker,language=request.language,speed=request.speed)
     if result == "Success":
         audio_list = audio[1].tolist() 
         logger.info("转化成功：{}".format(result))
@@ -81,4 +82,4 @@ async def convert_text(request:TTsRequest):
 
 if __name__ == '__main__':
     import uvicorn
-    uvicorn.run(app, host='0.0.0.0', port=cfg["api_port"], workers=cfg["api_workers"],log_level="info")
+    uvicorn.run(app, host='0.0.0.0', port=20003, workers=1,log_level="info")
