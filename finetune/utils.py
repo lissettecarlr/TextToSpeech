@@ -316,7 +316,7 @@ def get_hparams(init=True):
     parser.add_argument('--drop_speaker_embed', type=str2bool, default=False, help='whether to drop existing characters')
     parser.add_argument('--train_with_pretrained_model', type=str2bool, default=True,
                         help='whether to train with pretrained model')
-    parser.add_argument('--preserved', type=int, default=4,
+    parser.add_argument('--preserved', type=int, default=2,
                         help='Number of preserved models')
 
     args = parser.parse_args()

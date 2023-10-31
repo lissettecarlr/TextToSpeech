@@ -57,7 +57,7 @@ unzip sampled_audio4ft_v2.zip
 ```bash
 mkdir pretrained_models
 
-# 中日双语模型（一般就用这个）
+# 中日双语模型
 wget https://huggingface.co/spaces/sayashi/vits-uma-genshin-honkai/resolve/main/model/D_0-p.pth -O ./pretrained_models/D_0.pth
 wget https://huggingface.co/spaces/sayashi/vits-uma-genshin-honkai/resolve/main/model/G_0-p.pth -O ./pretrained_models/G_0.pth
 wget https://huggingface.co/spaces/sayashi/vits-uma-genshin-honkai/resolve/main/model/config.json -O ./configs/finetune_speaker.json
@@ -72,6 +72,9 @@ wget https://huggingface.co/datasets/Plachta/sampled_audio4ft/resolve/main/VITS-
 wget https://huggingface.co/datasets/Plachta/sampled_audio4ft/resolve/main/VITS-Chinese/G_0.pth -O ./pretrained_models/G_0.pth
 wget https://huggingface.co/datasets/Plachta/sampled_audio4ft/resolve/main/VITS-Chinese/config.json -O ./configs/finetune_speaker.json
 ```
+
+以下是使用纯中文模型
+
 
 ### 训练数据
 
@@ -112,20 +115,20 @@ python scripts/video2audio.py
 # 将所有音频去噪，文件被存放在denoised_audio中
 python scripts/denoise_audio.py
 # 分割并标注长音频，从./denoised_audio/文件夹中加载音频，输出到segmented_character_voice中
-python scripts/long_audio_transcribe.py --languages "CJ" --whisper_size large
+python scripts/long_audio_transcribe.py --languages "C" --whisper_size large
 # 标注短音频
-python scripts/short_audio_transcribe.py --languages "CJ" --whisper_size large
+python scripts/short_audio_transcribe.py --languages "C" --whisper_size large
 # 底模采样率可能与辅助数据不同，需要重采样
 python scripts/resample.py
 ```
 
 花费训练和测试集的最终标注，如果总样本少于100条/样本质量一般或较差/样本来自爬取的视频，可以使用辅助训练数据
 ```bash
-python preprocess_v2.py --add_auxiliary_data True --languages "CJ"
+python preprocess_v2.py --add_auxiliary_data True --languages "C"
 ```
 如果总样本量很大/样本质量很高/希望加速训练/只有二次元角色则可以直接
 ```bash
-preprocess_v2.py --languages "CJ"
+preprocess_v2.py --languages "C"
 ```
 标注文件会被保存在当前目录
 
@@ -141,7 +144,7 @@ tensorboard --logdir="./OUTPUT_MODEL" --bind_all
 ```bash
 # 指定GPU
 export CUDA_VISIBLE_DEVICES="0"
-python finetune_speaker_v2.py -m "./OUTPUT_MODEL" --max_epochs "200" --drop_speaker_embed True
+python finetune_speaker_v2.py -m "./OUTPUT_MODEL" --max_epochs "200" --drop_speaker_embed True 
 ```
 
 如果是继续训练
@@ -149,11 +152,14 @@ python finetune_speaker_v2.py -m "./OUTPUT_MODEL" --max_epochs "200" --drop_spea
 python finetune_speaker_v2.py -m "./OUTPUT_MODEL" --max_epochs "200" --drop_speaker_embed False --cont True
 ```
 
+* 根据显卡修改`modified_finetune_speaker.json`中的`batch_size`，我这里设置为32，消耗了13G显存。
+
 ### 测试结果
 ```bash
 cp ./configs/modified_finetune_speaker.json ./finetune_speaker.json
 python VC_inference.py --model_dir ./OUTPUT_MODEL/G_latest.pth --share True
 ```
+
 
 ### 报错解决
 

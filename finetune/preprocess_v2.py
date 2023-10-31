@@ -108,7 +108,7 @@ if __name__ == "__main__":
                 f.write(line)
         print("finished")
     else:
-        # Do not add extra helper data
+        # Do not add extra helper data 不添加额外数据
         # STEP 1: modify config file
         with open("./configs/finetune_speaker.json", 'r', encoding='utf-8') as f:
             hps = json.load(f)
