@@ -57,7 +57,7 @@ if __name__ == "__main__":
             cc_duplicate = 1
 
 
-        # STEP 2: modify config file
+        # STEP 2: modify config file 
         with open("./configs/finetune_speaker.json", 'r', encoding='utf-8') as f:
             hps = json.load(f)
 

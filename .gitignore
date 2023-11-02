@@ -148,6 +148,7 @@ raw_audio/*.wav
 sampled_audio4ft
 segmented_character_voice/
 separated/
+custom_character_voice/
 final_annotation_train.txt
 final_annotation_val.txt
 long_character_anno.txt

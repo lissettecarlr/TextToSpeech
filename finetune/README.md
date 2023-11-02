@@ -122,15 +122,20 @@ python scripts/short_audio_transcribe.py --languages "C" --whisper_size large
 python scripts/resample.py
 ```
 
-花费训练和测试集的最终标注，如果总样本少于100条/样本质量一般或较差/样本来自爬取的视频，可以使用辅助训练数据
+这里会生成`xx_character_anno.txt`的标注文件，如果想提升之后训练质量，可以对内容进行校准，使其实际音频和whisper识别出来的一致。
+
+下面将会根据`xx_character_anno.txt`转化最终标准，如果总样本少于100条/样本质量一般或较差/样本来自爬取的视频，可以使用辅助训练数据，就是上面那个额外数据。
+
 ```bash
 python preprocess_v2.py --add_auxiliary_data True --languages "C"
 ```
+
 如果总样本量很大/样本质量很高/希望加速训练/只有二次元角色则可以直接
 ```bash
-preprocess_v2.py --languages "C"
+python preprocess_v2.py --languages "C"
 ```
-标注文件会被保存在当前目录
+生成标注文件会被保存在当前目录
+
 
 ### 训练
 
@@ -160,6 +165,16 @@ cp ./configs/modified_finetune_speaker.json ./finetune_speaker.json
 python VC_inference.py --model_dir ./OUTPUT_MODEL/G_latest.pth --share True
 ```
 
+### 成品
+
+#### paimon
+
+* 训练数据来源于huggingface，总10664条。
+* 使用`python scripts/short_audio_transcribe.py --languages "C" --whisper_size large`对语音进行标注。
+* 通过qwen-7b对标注的文本进行繁体转简体
+* 通过`python preprocess_v2.py --languages "C"`转化标注
+* 进行训练，batch_size设置为32时，显存需要至少24G。
+* 结果见[度盘](https://pan.baidu.com/s/1SL5aqT4LqQXu2OU0_Ph40w?pwd=kuon)
 
 ### 报错解决
 

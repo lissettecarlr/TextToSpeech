@@ -1,6 +1,6 @@
 {
   "train": {
-    "log_interval": 10,
+    "log_interval": 20,
     "eval_interval": 100,
     "seed": 1234,
     "epochs": 10000,
@@ -10,7 +10,7 @@
       0.99
     ],
     "eps": 1e-09,
-    "batch_size": 16,
+    "batch_size": 64,
     "fp16_run": true,
     "lr_decay": 0.999875,
     "segment_size": 8192,
@@ -86,8 +86,7 @@
     "gin_channels": 256
   },
   "speakers": {
-    "sqq": 0,
-    "zhongli": 1
+    "paimon": 0
   },
   "symbols": [
     "_",

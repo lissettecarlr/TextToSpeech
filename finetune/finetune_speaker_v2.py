@@ -42,6 +42,7 @@ from mel_processing import mel_spectrogram_torch, spec_to_mel_torch
 torch.backends.cudnn.benchmark = True
 global_step = 0
 
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 def main():
   """Assume Single Node Multi GPUs Training Only"""

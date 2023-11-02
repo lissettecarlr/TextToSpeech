@@ -50,7 +50,6 @@ app.add_middleware(
    allow_headers=["*"], #允许所有的请求标头
 )
 
-
 class TTsRequest(BaseModel):
     text: str
     language : str = "简体中文"
