@@ -93,3 +93,21 @@ api_url: "填入接口地址"
     * speaker(string):模型中的角色
 
 
+
+## 3 其他
+
+offline在`kuontts/offline/text/mandarin.py`中设置了
+```python
+jieba.setLogLevel(logging.INFO)
+```
+以取消显示下列内容
+```bash
+Building prefix dict from the default dictionary ...
+DEBUG:jieba:Building prefix dict from the default dictionary ...
+Loading model from cache /tmp/jieba.cache
+DEBUG:jieba:Loading model from cache /tmp/jieba.cache
+Loading model cost 0.586 seconds.
+DEBUG:jieba:Loading model cost 0.586 seconds.
+Prefix dict has been built successfully.
+DEBUG:jieba:Prefix dict has been built successfully.
+```

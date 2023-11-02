@@ -153,3 +153,4 @@ final_annotation_train.txt
 final_annotation_val.txt
 long_character_anno.txt
 sampled_audio4ft.txt
+test.wav
