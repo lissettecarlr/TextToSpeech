@@ -10,6 +10,8 @@ if __name__ == "__main__":
     else:
         print("失败")
 
+    print("audio:{}".format(res[0]))
+
+    
     res = tts.convert(text="你好，很高兴认识你")
-    print("rate:{}".format(res[0]))
     print("audio:{}".format(res[1]))

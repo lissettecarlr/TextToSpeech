@@ -15,8 +15,12 @@ class TTS:
             from .online import OnlineTTS
             self.server = OnlineTTS(config["api_url"])
         self.speaker = config["speaker"]
+        logger.info("tts init [{}]".format(config['channel']))
+
     def convert(self,text:str,save_path:str=None):
-        res,audio = self.server.run(text=text,save_path=save_path,speaker=self.speaker)
+        res,output = self.server.run(text=text,save_path=save_path,speaker=self.speaker)
+        rate = output[0]
+        audio = output[1]
         if res == 'Success':
             return audio
         else:
