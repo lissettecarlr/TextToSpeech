@@ -34,6 +34,20 @@ pip install ruamel.yaml
 mkdir segmented_character_voice
 ```
 
+**11月whisper发发布了'large-v3'模型，如果要使用新模型来转换语音**
+```bash
+将之前的卸载
+pip uninstall whisper
+再安装
+pip install git+https://github.com/openai/whisper.git
+```
+验证:
+```bash
+>>> whisper.available_models()
+['tiny.en', 'tiny', 'base.en', 'base', 'small.en', 'small', 'medium.en', 'medium', 'large-v1', 'large-v2', 'large-v3', 'large']
+```
+之后将下列的脚本模型选择改成`large-v3`即可。
+
 #### 安装monotonic align
 ```base
 cd monotonic_align
@@ -173,7 +187,7 @@ python VC_inference.py --model_dir ./OUTPUT_MODEL/G_latest.pth --share True
 * 使用`python scripts/short_audio_transcribe.py --languages "C" --whisper_size large`对语音进行标注。
 * 通过qwen-7b对标注的文本进行繁体转简体
 * 通过`python preprocess_v2.py --languages "C"`转化标注
-* 进行训练，batch_size设置为32时，显存需要至少24G。
+* 进行训练，batch_size设置为64时，显存需要至少24G。
 * 结果见[度盘](https://pan.baidu.com/s/1SL5aqT4LqQXu2OU0_Ph40w?pwd=kuon)
 
 ### 报错解决

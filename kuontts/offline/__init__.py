@@ -9,35 +9,36 @@ from .text import text_to_sequence
 from . import utils
 
 
-device = "cuda:0" if torch.cuda.is_available() else "cpu"
+
+# device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
 class OfflineTTS():
-    def __init__(self,config_path = "./kuontts/offline/OUTPUT_MODEL/config.json",model_path = "./kuontts/offline/OUTPUT_MODEL/G_latest.pth") -> None:
+    def __init__(self,config_path = "./kuontts/offline/OUTPUT_MODEL/config.json",model_path = "./kuontts/offline/OUTPUT_MODEL/G_latest.pth",device="cuda:0") -> None:
         self.config_path = config_path
         self.model_path = model_path
-        
+        self.device = device if torch.cuda.is_available() else "cpu"
         hps = utils.get_hparams_from_file(config_path)
         net_g = SynthesizerTrn(
             len(hps.symbols),
             hps.data.filter_length // 2 + 1,
             hps.train.segment_size // hps.data.hop_length,
             n_speakers=hps.data.n_speakers,
-            **hps.model).to(device)
+            **hps.model).to(self.device)
         _ = net_g.eval()
         _ = utils.load_checkpoint(model_path, net_g, None)
         speaker_ids = hps.speakers
-        self.tts_fn = OfflineTTS.create_tts_fn(net_g, hps, speaker_ids)
+        self.tts_fn = self.create_tts_fn(net_g, hps, speaker_ids)
    
-    @staticmethod
-    def get_text(text, hps, is_symbol):
+    #@staticmethod
+    def get_text(self,text, hps, is_symbol):
         text_norm = text_to_sequence(text, hps.symbols, [] if is_symbol else hps.data.text_cleaners)
         if hps.data.add_blank:
             text_norm = commons.intersperse(text_norm, 0)
         text_norm = LongTensor(text_norm)
         return text_norm
 
-    @staticmethod
-    def create_tts_fn(model, hps, speaker_ids):
+    #@staticmethod
+    def create_tts_fn(self,model, hps, speaker_ids):
         def tts_fn(text, speaker, language, speed=1):
             '''
             language :  in  ['日本語', '简体中文', 'English']
@@ -55,11 +56,12 @@ class OfflineTTS():
 
             try: 
                 speaker_id = speaker_ids[speaker]
-                stn_tst = OfflineTTS.get_text(text, hps, False)
+                #stn_tst = OfflineTTS.get_text(text, hps, False)
+                stn_tst = self.get_text(text, hps, False)
                 with no_grad():
-                    x_tst = stn_tst.unsqueeze(0).to(device)
-                    x_tst_lengths = LongTensor([stn_tst.size(0)]).to(device)
-                    sid = LongTensor([speaker_id]).to(device)
+                    x_tst = stn_tst.unsqueeze(0).to(self.device)
+                    x_tst_lengths = LongTensor([stn_tst.size(0)]).to(self.device)
+                    sid = LongTensor([speaker_id]).to(self.device)
                     audio = model.infer(x_tst, x_tst_lengths, sid=sid, 
                                         noise_scale=.667, # 情感变化程度
                                         noise_scale_w=0.8,# 音素发音长度

@@ -13,6 +13,7 @@ import webbrowser
 
 from text import text_to_sequence, _clean_text
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
+
 import logging
 logging.getLogger("PIL").setLevel(logging.WARNING)
 logging.getLogger("urllib3").setLevel(logging.WARNING)
@@ -113,10 +114,10 @@ if __name__ == "__main__":
                 with gr.Column():
                     textbox = gr.TextArea(label="Text",
                                           placeholder="Type your sentence here",
-                                          value="こんにちわ。", elem_id=f"tts-input")
+                                          value="早上好，我们今天去哪里玩呀。", elem_id=f"tts-input")
                     # select character
                     char_dropdown = gr.Dropdown(choices=speakers, value=speakers[0], label='character')
-                    language_dropdown = gr.Dropdown(choices=lang, value=lang[0], label='language')
+                    language_dropdown = gr.Dropdown(choices=lang, value=lang[1], label='language')
                     duration_slider = gr.Slider(minimum=0.1, maximum=5, value=1, step=0.1,
                                                 label='速度 Speed')
                 with gr.Column():

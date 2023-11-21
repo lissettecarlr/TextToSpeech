@@ -1,3 +1,4 @@
 channel : offline
 api_url: "http://172.19.100.38:20003/tts/convert"
 speaker: paimon
+use_gpu: cuda:0
