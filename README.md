@@ -50,7 +50,7 @@
 
 ### 2.1 导入模型
 
-离线使用或者部署服务需要下载模型，放置到kuontts/offline/OUTPUT_MODEL文件夹中，如果不放在治理则需要在使用`OfflineTTS`时传入地址，包含config.json和G_latest.pth两个文件。
+离线使用或者部署服务需要下载模型，放置到kuontts/offline/OUTPUT_MODEL文件夹中，如果不放在这里则需要在使用`OfflineTTS`时传入地址，包含config.json和G_latest.pth两个文件。
 
 ### 2.2 离线使用
 
@@ -75,7 +75,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 也就是调用接口请求了上面部署的服务，修改kuontts中的配置文件config.yaml
 ```yaml
-channel : offline
+channel : online
 api_url: "填入接口地址"
 ```
 

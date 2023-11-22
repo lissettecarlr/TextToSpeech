@@ -46,7 +46,7 @@ pip install git+https://github.com/openai/whisper.git
 >>> whisper.available_models()
 ['tiny.en', 'tiny', 'base.en', 'base', 'small.en', 'small', 'medium.en', 'medium', 'large-v1', 'large-v2', 'large-v3', 'large']
 ```
-之后将下列的脚本模型选择改成`large-v3`即可。
+之后将下列的脚本([数据处理](#数据处理))中执行参数`whisper_size`模型选择改成`large-v3`即可。
 
 #### 安装monotonic align
 ```base
@@ -56,6 +56,7 @@ python setup.py build_ext --inplace
 ```
 
 ### 下载微调额外数据（大概三百M）
+当自己的训练数据少的时候才会用到
 ```bash
 wget https://huggingface.co/datasets/Plachta/sampled_audio4ft/resolve/main/sampled_audio4ft_v2.zip
 unzip sampled_audio4ft_v2.zip
